@@ -21,6 +21,15 @@ interface GitHubRelease {
 
 type Platform = "win" | "macos" | "linux-appimage" | "linux-deb" | "other";
 
+/** Assets that are updater/index metadata, not real user downloads. */
+function isUpdaterNoise(name: string): boolean {
+  const n = name.toLowerCase();
+  return n.startsWith("latest-") && (n.endsWith(".yml") || n.endsWith(".yaml"))
+    || n === "latest.yml"
+    || n.endsWith(".blockmap")
+    || n.endsWith(".zsync");
+}
+
 function detectPlatform(name: string): Platform {
   const n = name.toLowerCase();
   if (n.endsWith(".exe") || n.includes("setup") || n.includes("windows") || n.includes("-win")) return "win";
@@ -55,6 +64,7 @@ const EMPTY_COUNTS = (): Record<Platform, number> => ({
 function countReleaseAssets(release: GitHubRelease): Record<Platform, number> {
   const counts = EMPTY_COUNTS();
   for (const asset of release.assets) {
+    if (isUpdaterNoise(asset.name)) continue;
     const p = detectPlatform(asset.name);
     counts[p] += asset.download_count;
   }
