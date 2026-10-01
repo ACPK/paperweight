@@ -51,20 +51,30 @@ Both paid plans unlock unsubscribe, trash, spam, bulk cleanup actions, privacy r
 
 ## Development
 
-If you're building from source you need to add your own OAuth credentials. Copy [`.env.example`](.env.example) as `.env` and add your own Google and Microsoft client info.
+Released binaries ship with OAuth credentials configured. Building from source needs your own.
 
-**Google** - https://console.cloud.google.com/
+```bash
+yarn
+cp .env.example .env   # then fill in the three IDs below
+yarn dev
+```
+
+OAuth values are baked in at build time (`electron.vite.config.ts`). Empty `.env` values compile to empty strings and auth fails at runtime.
+
+**Google / Gmail** — https://console.cloud.google.com/
 - Create OAuth 2.0 credentials, application type "Desktop app"
-- Enable the **Gmail API** in API Library
+- Enable the Gmail API
 - Add scope `https://www.googleapis.com/auth/gmail.modify` on the consent screen
 - Add yourself as a test user while the app is in testing mode
-- Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`
+- Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in `.env`
 
-**Microsoft** - https://portal.azure.com/
+**Microsoft** — https://portal.azure.com/
 - Register an app, supported account types "Personal + work/school"
-- Authentication → add "Mobile and desktop applications" platform with redirect URI `http://localhost`
-- API permissions → Microsoft Graph → Delegated → add `User.Read`, `Mail.ReadWrite`, `Mail.Send`, `offline_access`, `openid`, `profile`
-- Set `MICROSOFT_CLIENT_ID` (no secret — we use PKCE)
+- Authentication → add "Mobile and desktop applications" with redirect URI `http://localhost`
+- API permissions → Microsoft Graph → Delegated → `User.Read`, `Mail.ReadWrite`, `Mail.Send`, `offline_access`, `openid`, `profile`
+- Set `MICROSOFT_CLIENT_ID` in `.env` (no secret; the flow uses PKCE)
+
+IMAP accounts need no OAuth env vars.
 
 ## Contributing
 
