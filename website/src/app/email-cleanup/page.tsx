@@ -20,6 +20,7 @@ export const metadata = buildMetadata({
   title,
   description,
   path: "/email-cleanup",
+  image: "/og/email-cleanup.png",
   imageAlt: "Paperweight mailing lists and bulk unsubscribe view",
 });
 

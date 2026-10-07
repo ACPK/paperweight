@@ -20,6 +20,7 @@ export const metadata = buildMetadata({
   title,
   description,
   path: "/remove-personal-data",
+  image: "/og/remove-personal-data.png",
   imageAlt: "Paperweight personal data detection and review dashboard",
 });
 

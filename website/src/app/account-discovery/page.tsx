@@ -20,6 +20,7 @@ export const metadata = buildMetadata({
   title,
   description,
   path: "/account-discovery",
+  image: "/og/account-discovery.png",
   imageAlt: "Paperweight account discovery company detail view",
 });
 
