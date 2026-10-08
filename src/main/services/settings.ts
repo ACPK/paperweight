@@ -8,7 +8,9 @@ import { licenseLog } from "../utils/log";
 export const PRO_REQUIRED_MESSAGE = "Paperweight Pro is required. Upgrade in Settings to continue.";
 
 export function requirePro(): void {
-  if (!getLicenseStatus().active) throw new Error(PRO_REQUIRED_MESSAGE);
+  // Fork change (ACPK/paperweight): Pro paywall removed. All features are
+  // available without a license key, so this gate is now a no-op. The
+  // function is kept so existing call sites continue to compile.
 }
 
 // --- Key-value settings ---

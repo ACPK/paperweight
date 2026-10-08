@@ -16,8 +16,6 @@ import {
 import { configureGlobalDbPath } from "../main/globalDb";
 import { getGlobalSetting } from "../main/services/globalSettings";
 
-import { getLicenseStatus, PRO_REQUIRED_MESSAGE } from "../main/services/settings";
-
 interface McpPaths {
   userData: string;
   resources: string;
@@ -71,22 +69,21 @@ function accountDbPath(paths: McpPaths, email: string): string {
 }
 
 export function hasReadAccess(): boolean {
-  if (!getLicenseStatus().active) return false;
+  // Fork change (ACPK/paperweight): Pro paywall removed — no license needed.
   const access = getGlobalSetting("agentAccess") ?? "off";
   return access === "read" || access === "actions";
 }
 
 export function hasWriteAccess(): boolean {
-  return getLicenseStatus().active && getGlobalSetting("agentAccess") === "actions";
+  // Fork change (ACPK/paperweight): Pro paywall removed — no license needed.
+  return getGlobalSetting("agentAccess") === "actions";
 }
 
 export function readAccessError() {
   return {
     content: [{
       type: "text" as const,
-      text: getLicenseStatus().active
-        ? "AI Agent access is off. Enable it in Paperweight Settings."
-        : PRO_REQUIRED_MESSAGE,
+      text: "AI Agent access is off. Enable it in Paperweight Settings.",
     }],
     isError: true,
   };
@@ -96,9 +93,7 @@ export function writeAccessError() {
   return {
     content: [{
       type: "text" as const,
-      text: getLicenseStatus().active
-        ? "Read & write AI Agent access is required. Change Access in Paperweight Settings."
-        : PRO_REQUIRED_MESSAGE,
+      text: "Read & write AI Agent access is required. Change Access in Paperweight Settings.",
     }],
     isError: true,
   };
@@ -189,7 +184,9 @@ export function initializePaperweight(): void {
   configureGlobalDbPath(join(paths.userData, "global.db"));
   configureAccountRegistryPath(join(paths.userData, "accounts.json"));
 
-  if (!getLicenseStatus().active) throw new McpStartupError(PRO_REQUIRED_MESSAGE);
+  // Fork change (ACPK/paperweight): Pro paywall removed — the license check
+  // that used to block MCP startup is gone. Agent access is still controlled
+  // by the "AI Agent access" setting below.
   if (!hasReadAccess()) {
     throw new McpStartupError(
       "AI Agent access is off. Enable it in Paperweight Settings.",

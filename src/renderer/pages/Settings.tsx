@@ -290,7 +290,6 @@ export default function Settings(): JSX.Element {
   };
 
   const actionBusy = switchingEmail !== null || removeInProgress;
-  const needsLicense = !license.active && accounts.length >= 1;
 
   return (
     <div className="space-y-6 max-w-xl">
@@ -403,17 +402,11 @@ export default function Settings(): JSX.Element {
 
           <div className="flex items-center gap-3 pt-1">
             <button
-              className={`btn btn-sm w-fit ${needsLicense ? "btn-ghost" : "btn-primary"}`}
+              className="btn btn-sm w-fit btn-primary"
               onClick={handleAddAccount}
             >
-              {needsLicense && <Lock className="w-3.5 h-3.5" />}
               Add account
             </button>
-            {needsLicense && (
-              <span className="text-xs text-base-content/50">
-                Requires Pro
-              </span>
-            )}
             <button
               type="button"
               className="btn btn-link btn-sm px-0"
@@ -661,8 +654,9 @@ export default function Settings(): JSX.Element {
               }}
             >
               <option value="off">Off</option>
-              <option value="read" disabled={!license.active}>Read only</option>
-              <option value="actions" disabled={!license.active}>Read &amp; write</option>
+              {/* Fork change (ACPK/paperweight): Pro paywall removed — no license needed. */}
+              <option value="read">Read only</option>
+              <option value="actions">Read &amp; write</option>
             </select>
           </label>
           {agentAccess === "actions" ? (
